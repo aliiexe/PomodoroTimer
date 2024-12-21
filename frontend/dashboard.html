@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomodoro Timer Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Pomodoro Dashboard</h1>
+      <div>
+        <a href="#" class="px-4 py-2 bg-blue-700 rounded hover:bg-blue-800">Home</a>
+        <a href="#" class="px-4 py-2 bg-blue-700 rounded hover:bg-blue-800">Settings</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Content -->
+  <div class="container mx-auto mt-8">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">Welcome Back!</h2>
+
+    <!-- Stats Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Total Sessions -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-xl font-bold text-gray-700">Total Sessions</h3>
+        <p id="total-sessions" class="text-4xl font-extrabold text-blue-600">0</p>
+      </div>
+
+      <!-- Total Rewards -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-xl font-bold text-gray-700">Total Rewards</h3>
+        <p id="total-rewards" class="text-4xl font-extrabold text-green-600">0</p>
+      </div>
+
+      <!-- Productivity Score -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-xl font-bold text-gray-700">Productivity Score</h3>
+        <p id="productivity-score" class="text-4xl font-extrabold text-yellow-600">0</p>
+      </div>
+
+      <!-- Goals Achieved -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-xl font-bold text-gray-700">Goals Achieved</h3>
+        <p id="goals-achieved" class="text-4xl font-extrabold text-purple-600">0</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+    <p>&copy; 2024 Pomodoro Timer. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Fetch data from the API
+    async function fetchData() {
+      try {
+        const response = await fetch("http://localhost:5000/api/productivity");
+        const data = await response.json();
+
+        // Update the dashboard with fetched data
+        document.getElementById("total-sessions").textContent = data.totalSessions || 0;
+        document.getElementById("total-rewards").textContent = data.totalRewards || 0;
+        document.getElementById("productivity-score").textContent = data.productivityScore || 0;
+        document.getElementById("goals-achieved").textContent = data.goalsAchieved || 0;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    // Call fetchData on page load
+    fetchData();
+  </script>
+</body>
+</html>
