@@ -65,7 +65,7 @@
 
         // Update the dashboard with fetched data
         document.getElementById("total-sessions").textContent = data.totalSessions || 0;
-        document.getElementById("total-rewards").textContent = data.totalRewards || 0;
+        document.getElementById("total-rewards").textContent = data.totalRewards || 5;
         document.getElementById("productivity-score").textContent = data.productivityScore || 0;
         document.getElementById("goals-achieved").textContent = data.goalsAchieved || 0;
       } catch (error) {

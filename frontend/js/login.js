@@ -11,7 +11,7 @@ document.getElementById('login-form').addEventListener('submit', async function 
     });
 
     if (response.status === 200) {
-      window.location.href = '/dashboard.html'; // Redirect to the dashboard
+      window.location.href = 'dashboard.html';
     } else {
       alert('Login failed');
     }

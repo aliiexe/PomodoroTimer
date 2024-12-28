@@ -3,22 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <title>PeakFocus</title>
 </head>
-<body class="bg-gray-100">
-
-  <div class="container mx-auto p-8">
-    <div class="flex justify-center items-center h-screen">
-      <div class="text-center">
-        <h1 class="text-4xl font-bold mb-4">Welcome to Our App</h1>
-        <p class="text-xl mb-4">Your productivity, rewarded!</p>
-        <a href="login.html" class="bg-blue-500 text-white px-6 py-3 rounded-md">Login</a>
-        <a href="signup.html" class="ml-4 bg-green-500 text-white px-6 py-3 rounded-md">Sign Up</a>
+<body>
+  <div class="container-fluid header">
+    <div class="row align-items-center">
+      <div class="col-auto">
+        <img src="assets/images/PeakFocus logo.svg" alt="PeakFocus Logo" class="logo">
+      </div>
+      <div class="col"></div>
+      <div class="col-auto auth-links">
+        <a href="./login.html">Sign in</a>
+        <a href="./signup.html">Get demo</a>
+      </div>
+      <div class="col-auto">
+        <div class="hamburger">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
       </div>
     </div>
+    <div class="nav-menu hidden">
+      <a href="./login.html" class="nav-link">Sign in</a>
+      <a href="./signup.html" class="nav-link">Get demo</a>
+    </div>
   </div>
+  <div class="container-fluid hero">
+      <div class="hero relative flex items-center justify-center min-h-screen text-center px-4">
+        <div class="blurred-background">
+          <div class="blurred-circle" style="top: 10%; left: 20%;"></div>
+          <div class="blurred-circle" style="top: 60%; left: 70%;"></div>
+          <div class="blurred-circle" style="top: 40%; left: 10%;"></div>
+        </div>
+    
+        <div class="content">
+          <div class="flex justify-center mb-6">
+            <img src="assets/images/PeakFocus icon.svg" alt="Hero Logo">
+          </div>
+          <h1 class="text-4xl font-bold text-gray-900 md:text-5xl">Plan, Track and Achieve</h1>
+          <h2 class="text-xl text-gray-500 mt-4 md:text-2xl">all in one place</h2>
+          <p class="text-gray-600 text-lg mt-6">Boost focus, track goals, and master productivity.</p>
+          <a href="./signup.html" class="mt-6 px-6 py-3 text-white  rounded-lg shadow-lg transition ">
+            Get a free demo
+          </a>
+        </div>
+      </div>
+    </div>
 
+    <div class="container-fluid">
+      <section class="features-section py-16 pb-20">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <span class="inline-block px-4 py-2 border border-gray-400 rounded-full text-gray-600 font-medium">Features</span>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-12 justify-center items-center">
+            <div class="feature-box border-2 border-dashed border-gray-400 rounded-lg p-6 text-center h-48 flex flex-col justify-center">
+              <h3 class="text-lg font-semibold text-gray-800 mb-2">Pomodoro Timer</h3>
+              <p class="text-gray-600">Maximize your focus with timed work sessions and power through your tasks.</p>
+            </div>
+      
+            <div class="feature-box border-2 border-dashed border-gray-400 rounded-lg p-6 text-center h-48 flex flex-col justify-center">
+              <h3 class="text-lg font-semibold text-gray-800 mb-2">Task Management</h3>
+              <p class="text-gray-600">Take control of your day by organizing tasks and setting clear, achievable goals.</p>
+            </div>
+      
+            <div class="feature-box border-2 border-dashed border-gray-400 rounded-lg p-6 text-center h-48 flex flex-col justify-center">
+              <h3 class="text-lg font-semibold text-gray-800 mb-2">Reward System</h3>
+              <p class="text-gray-600">Stay motivated by earning rewards as you crush your goals and complete tasks.</p>
+            </div>
+          </div>
+        </div>
+      </section>            
+    </div>
+
+    <div class="container-fluid">
+      <section class="pricing-section py-16">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <span class="inline-block px-4 py-2 border border-gray-400 rounded-full text-gray-600 font-medium">Pricing</span>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center items-start">
+            <div class="pricing-card bg-gray-100 border border-gray-300 rounded-lg shadow-md text-center p-6">
+              <h3 class="text-lg font-medium text-gray-800 mb-2">Basic Plan</h3>
+              <p class="text-gray-500 mb-4">For personal productivity</p>
+              <hr class="border-gray-300 mb-4">
+              <div class="text-4xl font-bold text-gray-800 mb-4">$5<span class="text-lg font-medium">/mo</span></div>
+              <ul class="text-gray-600 text-left mb-4 space-y-2">
+                <li>✔ Access to Pomodoro Timer</li>
+                <li>✔ Basic task management</li>
+                <li>✔ Single device access</li>
+              </ul>
+              <button class="w-full mt-4 px-4 py-2 text-white bg-red-400 hover:bg-red-500 rounded-lg">Get started</button>
+            </div>
+      
+            <div class="pricing-card bg-red-400 text-white rounded-lg shadow-lg text-center p-6 transform scale-105">
+              <h3 class="text-lg font-medium mb-2">Pro Plan</h3>
+              <p class="text-red-200 mb-4">For professionals</p>
+              <hr class="border-red-200 mb-4">
+              <div class="text-4xl font-bold mb-4">$9<span class="text-lg font-medium">/mo</span></div>
+              <ul class="text-red-100 text-left mb-4 space-y-2">
+                <li>✔ All Basic Plan features</li>
+                <li>✔ Advanced task management</li>
+                <li>✔ Multi-device sync</li>
+                <li>✔ Priority customer support</li>
+              </ul>
+              <button class="w-full mt-4 px-4 py-2 bg-white text-red-400 hover:bg-gray-100 rounded-lg">Get started</button>
+            </div>
+      
+            <div class="pricing-card bg-gray-100 border border-gray-300 rounded-lg shadow-md text-center p-6">
+              <h3 class="text-lg font-medium text-gray-800 mb-2">Advanced Plan</h3>
+              <p class="text-gray-500 mb-4">For teams and businesses</p>
+              <hr class="border-gray-300 mb-4">
+              <div class="text-4xl font-bold text-gray-800 mb-4">$15<span class="text-lg font-medium">/mo</span></div>
+              <ul class="text-gray-600 text-left mb-4 space-y-2">
+                <li>✔ All Pro Plan features</li>
+                <li>✔ Team collaboration tools</li>
+                <li>✔ Custom workflows</li>
+                <li>✔ Dedicated account manager</li>
+              </ul>
+              <button class="w-full mt-4 px-4 py-2 text-white bg-red-400 hover:bg-red-500 rounded-lg">Get started</button>
+            </div>
+          </div>
+        </div>
+      </section>      
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
