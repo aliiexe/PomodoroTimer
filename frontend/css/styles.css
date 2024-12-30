@@ -229,3 +229,13 @@ body {
       height: 100px;
     }
   }
+
+.footer-column a {
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 15px;
+}
+
+.footer-column a:hover {
+    color: #8C4DFE;
+}   

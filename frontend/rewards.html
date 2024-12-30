@@ -5,75 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Badges - PeakFocus</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .badge-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .badge-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: space-around;
-      width: 30px;
-      height: 30px;
-      cursor: pointer;
-    }
-
-    .line {
-      width: 30px;
-      height: 2px;
-      background-color: #8C4DFE;
-      transition: 0.5s;
-    }
-
-    .nav-menu {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background-color: white;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 10px;
-    }
-
-    .nav-menu.active {
-      display: flex;
-    }
-
-    .hamburger.active .line:nth-child(1) {
-      transform: rotate(45deg) translate(9px, 5px);
-    }
-
-    .hamburger.active .line:nth-child(2) {
-      opacity: 0;
-    }
-
-    .hamburger.active .line:nth-child(3) {
-      transform: rotate(-45deg) translate(9px, -5px);
-    }
-
-    @media (max-width: 768px) {
-      .hamburger {
-        display: flex;
-      }
-
-      .auth-links {
-        display: none;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="css/rewards.css">
 </head>
 <body class="bg-gray-50 font-sans">
   <div class="max-w-7xl mx-auto p-6">
-    <!-- Header -->
     <header class="flex justify-between items-center mb-8">
       <div>
         <img src="assets/images/PeakFocus logo.svg" alt="PeakFocus Logo">
@@ -106,26 +41,7 @@
     </main>
   </div>
 
-  <!-- Include Axios -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="js/rewards.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const hamburger = document.querySelector('.hamburger');
-      const navMenu = document.querySelector('.nav-menu');
-
-      hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-      });
-
-      document.querySelectorAll('.nav-link').forEach(link => 
-        link.addEventListener('click', () => {
-          hamburger.classList.remove('active');
-          navMenu.classList.remove('active');
-        })
-      );
-    });
-  </script>
 </body>
 </html>

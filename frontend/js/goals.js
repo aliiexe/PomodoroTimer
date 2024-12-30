@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Sort goals by createdAt in descending order
     goalsData = goalsData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+    // Display goals
     const formatTime = (timeInSeconds) => {
       const timeInMinutes = timeInSeconds / 60;
       if (timeInMinutes < 60) {
@@ -31,11 +32,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     };
 
+    // Format date to human-readable format
     const formatDate = (dateString) => {
       const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
+    // Creating a div element for each goal in the goalsData array and appends it to the goalsContainer element.
     goalsData.forEach(goal => {
       const goalItem = document.createElement('div');
       goalItem.className = 'goal-item';
@@ -60,6 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const editButton = goalItem.querySelector('.edit-btn');
       const deleteButton = goalItem.querySelector('.delete-btn');
 
+      // Event listeners for edit and delete buttons
       editButton.addEventListener('click', () => {
         const editModal = document.getElementById('edit-modal');
         const editGoalTitle = document.getElementById('edit-goal-title');
@@ -67,6 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         editGoalTitle.value = goal.title;
         editModal.classList.remove('hidden');
 
+        // Event listener for confirm edit button
         confirmEditButton.onclick = () => {
           const newTitle = editGoalTitle.value;
           if (newTitle) {
@@ -84,16 +89,20 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         };
 
+        // Event listener for cancel edit button
         document.getElementById('cancel-edit').onclick = () => {
           editModal.classList.add('hidden');
         };
       });
 
+
+      // Event listener for delete button
       deleteButton.addEventListener('click', () => {
         const deleteModal = document.getElementById('delete-modal');
         const confirmDeleteButton = document.getElementById('confirm-delete');
         deleteModal.classList.remove('hidden');
 
+        // Event listener for confirm delete button
         confirmDeleteButton.onclick = () => {
           axios.delete(`http://localhost:5000/api/goals/${goal._id}`)
             .then(response => {
@@ -111,17 +120,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         };
 
+        // Event listener for cancel delete button
         document.getElementById('cancel-delete').onclick = () => {
           deleteModal.classList.add('hidden');
         };
       });
     });
   } catch (error) {
+    // Display an error message if there's an error fetching user goals
     console.error('Error fetching user goals:', error);
     showToast('Error fetching goals.', 'error');
   }
 });
 
+// Toast notification function
 function showToast(message, type) {
   const toast = document.getElementById('toast');
   const toastMessage = document.getElementById('toast-message');
@@ -133,3 +145,21 @@ function showToast(message, type) {
     toast.classList.remove('show');
   }, 3000);
 }
+
+// Event listener for close button on toast notification
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => 
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+      })
+    );
+  });

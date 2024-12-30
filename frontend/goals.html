@@ -6,168 +6,10 @@
   <title>User Goals - PeakFocus</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    .goal-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px;
-      border-radius: 10px;
-      background: #fff;
-      color: #333;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .goal-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .goal-item h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .goal-item p {
-      margin: 0;
-      font-size: 1rem;
-      margin-bottom: 5px;
-    }
-
-    .goal-item .progress-bar {
-      width: 100%;
-      height: 10px;
-      background: #e0e0e0;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .goal-item .progress-bar .progress {
-      height: 100%;
-      background: #7b61ff;
-      border-radius: 5px;
-    }
-
-    .goal-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .goal-actions button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #333;
-      transition: color 0.3s ease;
-    }
-
-    .goal-actions button:hover {
-      color: #7b61ff;
-    }
-
-    @media (max-width: 768px) {
-      .goal-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .goal-actions {
-        margin-top: 10px;
-      }
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-
-    .toast.show {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .toast p {
-      margin: 0;
-      font-size: 16px;
-      color: #ffffff;
-    }
-
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: space-around;
-      width: 30px;
-      height: 30px;
-      cursor: pointer;
-    }
-
-    .line {
-      width: 30px;
-      height: 2px;
-      background-color: #8C4DFE;
-      transition: 0.5s;
-    }
-
-    .nav-menu {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background-color: white;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 10px;
-    }
-
-    .nav-menu.active {
-      display: flex;
-    }
-
-    .hamburger.active .line:nth-child(1) {
-      transform: rotate(45deg) translate(9px, 5px);
-    }
-
-    .hamburger.active .line:nth-child(2) {
-      opacity: 0;
-    }
-
-    .hamburger.active .line:nth-child(3) {
-      transform: rotate(-45deg) translate(9px, -5px);
-    }
-
-    @media (max-width: 768px) {
-      .hamburger {
-        display: flex;
-      }
-
-      .auth-links {
-        display: none;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="css/goals.css">
 </head>
 <body class="bg-gray-50 font-sans">
     <div class="max-w-7xl mx-auto p-6">
-    <!-- Header -->
     <header class="flex justify-between items-center mb-8">
       <div>
         <img src="assets/images/PeakFocus logo.svg" alt="PeakFocus Logo">
@@ -191,7 +33,6 @@
       </div>
     </header>
 
-    <!-- Goals Section -->
     <main>
       <h1 class="text-3xl font-semibold mb-6 text-center">Your Goals</h1>
       <div id="goals-container">
@@ -229,26 +70,7 @@
     <p id="toast-message"></p>
   </div>
 
-  <!-- Include Axios -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="js/goals.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const hamburger = document.querySelector('.hamburger');
-      const navMenu = document.querySelector('.nav-menu');
-
-      hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-      });
-
-      document.querySelectorAll('.nav-link').forEach(link => 
-        link.addEventListener('click', () => {
-          hamburger.classList.remove('active');
-          navMenu.classList.remove('active');
-        })
-      );
-    });
-  </script>
 </body>
 </html>

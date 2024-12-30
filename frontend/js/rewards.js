@@ -3,6 +3,7 @@ function logout() {
   window.location.href = "index.html";
 }
 
+// Get user data from localStorage
 const user = JSON.parse(localStorage.getItem("user")) || {};
 if (user._id) {
   console.log("User:", user._id);
@@ -11,6 +12,7 @@ if (user._id) {
   console.log("User not logged in");
 }
 
+// Fetch user rewards and display them
 document.addEventListener('DOMContentLoaded', async () => {
   const userId = user._id;
 
@@ -26,6 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       '6771cbec4e7860685cb8a5eb': { image: 'badge4.png', title: '10 Sessions Completed' },
     };
 
+    // Display user badges in the DOM using the badgeDetails object
     userData.rewards.forEach(rewardId => {
       const badge = badgeDetails[rewardId];
       if (badge) {
@@ -41,4 +44,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error('Error fetching user badges:', error);
   }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const hamburger = document.querySelector('.hamburger');
+  const navMenu = document.querySelector('.nav-menu');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+  });
+
+  document.querySelectorAll('.nav-link').forEach(link => 
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navMenu.classList.remove('active');
+    })
+  );
 });

@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const currentStreak = productivityData.reduce((acc, entry) => Math.max(acc, entry.streak), 0);
     const bestStreak = productivityData.reduce((acc, entry) => Math.max(acc, entry.bestStreak), 0);
 
-    // Convert time to appropriate units
+    // Convert time to mins or hours
     const formatTime = (timeInSeconds) => {
       const timeInMinutes = timeInSeconds / 60;
       if (timeInMinutes < 60) {
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('current-streak').textContent = `${currentStreak} days`;
     document.getElementById('best-streak').textContent = `${bestStreak} days`;
 
-    // Example chart for goals progress
+    // Chart for goals progress
     const goalsResponse = await axios.get(`http://localhost:5000/api/goals?userId=${userId}`);
     const goalsData = goalsResponse.data;
     const goalsProgress = goalsData.map(goal => ({
@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       progress: (goal.progress / goal.targetStudyTime) * 100,
     }));
 
+    // Create a bar chart for goals progress
     const goalsProgressChart = new ApexCharts(document.querySelector("#goals-progress"), {
       chart: {
         type: 'bar',
@@ -67,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     goalsProgressChart.render();
 
-    // Example chart for daily productivity
+    // Chart for daily productivity
     const dailyProductivityChart = new ApexCharts(document.querySelector("#daily-productivity-chart"), {
       chart: {
         type: 'line',
@@ -88,4 +89,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error('Error fetching productivity data:', error);
   }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const hamburger = document.querySelector('.hamburger');
+  const navMenu = document.querySelector('.nav-menu');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+  });
+
+  document.querySelectorAll('.nav-link').forEach(link => 
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navMenu.classList.remove('active');
+    })
+  );
 });

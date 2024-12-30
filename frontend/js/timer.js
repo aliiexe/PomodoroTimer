@@ -1,3 +1,7 @@
+// let's add desribing comments to the code to make it more readable and understandable
+
+
+// Get user data from localStorage
 const user = JSON.parse(localStorage.getItem("user")) || {};
 if (user._id) {
   console.log("User:", user._id);
@@ -6,8 +10,10 @@ if (user._id) {
   console.log("User not logged in");
 }
 
+// Define the base URL for the API
 const API_BASE_URL = "http://localhost:5000/api";
 
+// Define variables for the timer
 let timerInterval;
 let isRunning = false;
 let studyTime = 25;
@@ -20,6 +26,7 @@ let remainingTime = studyTime * 60;
 let notificationsEnabled = false;
 let goalId = null;
 
+// Get DOM elements
 const timerDisplay = document.getElementById("timer-display");
 const cycleInfo = document.getElementById("cycle-info");
 const startPauseButton = document.getElementById("start-pause-btn");
@@ -31,6 +38,7 @@ const quitModal = document.getElementById("quit-modal");
 const cancelQuitButton = document.getElementById("cancel-quit");
 const confirmQuitButton = document.getElementById("confirm-quit");
 
+// Update the timer display
 function updateTimerDisplay() {
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
@@ -39,6 +47,7 @@ function updateTimerDisplay() {
     .padStart(2, "0")}`;
 }
 
+// Pause the timer
 function pauseTimer() {
   clearInterval(timerInterval);
   isRunning = false;
@@ -46,6 +55,7 @@ function pauseTimer() {
   console.log("Timer paused");
 }
 
+// Toggle between starting and pausing the timer
 function toggleStartPause() {
   if (isRunning) {
     pauseTimer();
@@ -54,23 +64,31 @@ function toggleStartPause() {
   }
 }
 
+// Start the timer
 async function startTimer() {
   if (isRunning) return;
 
+  // Get the goal name from the input field
   const goalName = document.getElementById("goal-name").value;
+  let goal = document.getElementById("goal-name");
+  goal.value = "";
   if (!goalName && !goalId) {
     showToast("Please set a goal first.", "assets/images/no.gif");
     return;
   }
 
+  // Start the timer
   isRunning = true;
   console.log("Timer started");
 
+  // Show the goal name and cycle info
   goalDisplay.classList.remove("hidden");
   cycleInfo.classList.remove("hidden");
 
+  // Update the start/pause button text
   startPauseButton.textContent = "Pause";
 
+  // Create a new goal if the goal name is set and there is no goal ID
   if (goalName && !goalId) {
     try {
       const response = await axios.post(`${API_BASE_URL}/goals`, {
@@ -86,8 +104,10 @@ async function startTimer() {
     }
   }
 
+  // Update the cycle info at the beginning of each cycle
   cycleInfo.textContent = `Cycle ${cyclesCompleted + 1} out of ${cyclesPlanned}`;
 
+  // Start the timer interval
   timerInterval = setInterval(() => {
     if (remainingTime > 0) {
       remainingTime--;
@@ -100,7 +120,9 @@ async function startTimer() {
   }, 1000);
 }
 
+// Quit the timer
 async function quitTimer() {
+  // Reset the timer and hide elements
   clearInterval(timerInterval);
   isRunning = false;
   remainingTime = studyTime * 60;
@@ -113,6 +135,7 @@ async function quitTimer() {
 
   console.log("Timer quit");
 
+  // Update productivity stats
   try {
     await axios.post(`${API_BASE_URL}/productivity`, {
       userId: user._id,
@@ -237,11 +260,14 @@ async function quitTimer() {
 //   }
 // }
 
+// Handle session completion
 async function handleSessionCompletion() {
+  // Play notification sound if enabled
   if (notificationsEnabled) {
     playNotificationSound();
   }
 
+  // Check if the current session is a focus session
   if (currentSessionType === "focus") {
     console.log(`Focus session completed. Cycles completed: ${cyclesCompleted}`);
     if (cyclesPlanned === 1) {
@@ -249,17 +275,21 @@ async function handleSessionCompletion() {
       cyclesCompleted++;
       currentSessionType = "focus";
       remainingTime = studyTime * 60;
+      restTime = 0;
       console.log("Single cycle completed, skipping rest time");
     } else if (cyclesCompleted % breakAfter === 0 && cyclesCompleted !== cyclesPlanned) {
+      // Start a short break after the specified number of cycles
       currentSessionType = "break";
       remainingTime = restTime * 60;
       console.log("Starting short break");
     } else {
+      // Start a short break after each focus session
       currentSessionType = "break";
       remainingTime = restTime * 60;
       console.log("Starting short break");
     }
   } else {
+    // Start a focus session after each break
     cyclesCompleted++;
     currentSessionType = "focus";
     remainingTime = studyTime * 60;
@@ -269,14 +299,17 @@ async function handleSessionCompletion() {
   // Update cycle info at the beginning of each cycle
   cycleInfo.textContent = `Cycle ${cyclesCompleted + 1} out of ${cyclesPlanned}`;
 
-  if (cyclesCompleted >= cyclesPlanned) {
+  // Update productivity stats and goal progress after completing all cycles
+  if (cyclesCompleted >= cyclesPlanned) { // Check if all cycles are completed
     try {
+      // Update productivity stats
       const userResponse = await axios.get(`${API_BASE_URL}/users/${user._id}`);
       const userData = userResponse.data; // Use a different variable name
       const lastSessionDate = userData.lastSessionDate ? new Date(userData.lastSessionDate) : null;
       const currentDate = new Date();
       const isConsecutiveDay = lastSessionDate && (currentDate - lastSessionDate) / (1000 * 60 * 60 * 24) === 1;
 
+      // Update streak and best streak
       let streak = userData.streak || 0;
       let bestStreak = userData.bestStreak || 0;
 
@@ -290,6 +323,7 @@ async function handleSessionCompletion() {
         bestStreak = streak;
       }
 
+      // Update productivity stats
       await axios.post(`${API_BASE_URL}/productivity`, {
         userId: user._id,
         totalStudyTime: cyclesCompleted * studyTime * 60,
@@ -301,12 +335,14 @@ async function handleSessionCompletion() {
       });
       console.log("Productivity stats updated");
 
+      // Update user data
       await axios.put(`${API_BASE_URL}/users/${user._id}`, {
         lastSessionDate: currentDate,
         streak,
         bestStreak,
       });
 
+      // Update goal progress and status
       if (goalId) {
         await axios.put(`${API_BASE_URL}/goals/${goalId}`, {
           progress: cyclesCompleted * studyTime * 60,
@@ -315,11 +351,15 @@ async function handleSessionCompletion() {
         console.log("Goal progress updated");
       }
 
+      // Assign rewards based on productivity stats
       const productivityResponse = await axios.get(`${API_BASE_URL}/productivity?userId=${user._id}`);
       const productivityEntries = productivityResponse.data;
       const isFirstSession = productivityEntries.length === 1;
 
+      // Define rewards based on productivity stats
       let rewards = [];
+      // if it's the user's first session ever (no productivity entries exist) and 
+      // all cycles are completed as planned (no abandoned sessions) he gets a badge for the first session
       if (isFirstSession) {
         rewards.push({
           id: '67717d319594a1dae10556b1',
@@ -327,6 +367,8 @@ async function handleSessionCompletion() {
           image: "assets/images/badge1.png"
         });
       }
+      // if the user has completed 25 minutes of focus time and all cycles are completed as planned
+      // he gets a badge for completing the first 25 minutes session
       if (productivityEntries.length === 25 && cyclesCompleted >= cyclesPlanned) {
         rewards.push({
           id: '6771cbc74e7860685cb8a5e7',
@@ -334,6 +376,8 @@ async function handleSessionCompletion() {
           image: "assets/images/badge2.png"
         });
       }
+      // if the user has completed 5 sessions and all cycles are completed as planned
+      // he gets a badge for completing 5 sessions
       if (productivityEntries.length === 5 && cyclesCompleted >= cyclesPlanned) {
         rewards.push({
           id: '6771cbde4e7860685cb8a5e9',
@@ -341,6 +385,8 @@ async function handleSessionCompletion() {
           image: "assets/images/badge3.png"
         });
       }
+      // if the user has completed 10 sessions and all cycles are completed as planned
+      // he gets a badge for completing 10 sessions
       if (productivityEntries.length === 10 && cyclesCompleted >= cyclesPlanned) {
         rewards.push({
           id: '6771cbec4e7860685cb8a5eb',
@@ -349,6 +395,10 @@ async function handleSessionCompletion() {
         });
       }
 
+      // Reset the timer
+      resetTimer();
+
+      // Assign rewards to the user
       for (const reward of rewards) {
         await axios.put(`${API_BASE_URL}/users/${user._id}/rewards/${reward.id}`);
         playAchievementSound();
@@ -356,25 +406,30 @@ async function handleSessionCompletion() {
         await showToastSequentially(reward.message, reward.image);
       }
 
+      // If no rewards are assigned, show a message to the user saying that he completed his focus session and goal
       if (rewards.length === 0) {
         showToast("You completed your focus session and goal!", "assets/images/check.gif");
         console.log("No reward assigned for this session count.");
       }
 
-      // Reset and hide elements
-      playNotificationSound();
-      resetTimer();
+      // Play notification sound only if there is no rewards
+      if (rewards.length === 0) {
+        playNotificationSound();
+      }
     } catch (error) {
+      // if there's an error, log it to the console and show an error message to the user
       console.error("Error updating productivity or goal:", error);
       showToast("An error occurred while updating productivity or goal.", "assets/images/error.png");
     }
   } else {
+    // If all cycles are not completed, update the timer display and start the timer again
     playNotificationSound();
     updateTimerDisplay();
     startTimer();
   }
 }
 
+// Show a toast notification with a message and an image
 function showToastSequentially(message, imageUrl) {
   return new Promise((resolve) => {
     showToast(message, imageUrl);
@@ -396,7 +451,9 @@ function showToastSequentially(message, imageUrl) {
   });
 }
 
+// Reset the timer
 function resetTimer() {
+  // Reset the timer variables
   clearInterval(timerInterval);
   isRunning = false;
   studyTime = 25;
@@ -416,6 +473,7 @@ function resetTimer() {
   cycleInfo.textContent = `Cycle ${cyclesCompleted + 1} out of ${cyclesPlanned}`;
 }
 
+// Adjust the value of the focus time, break time, cycles, or break after
 function adjustValue(type, operation) {
   let element, value;
   switch (type) {
@@ -437,14 +495,17 @@ function adjustValue(type, operation) {
       break;
   }
 
+  // increase or decrease the value based on the operation
   if (operation === "+") {
     value++;
   } else if (operation === "-") {
     value = value > 1 ? value - 1 : 1;
   }
 
+  // update the value in the input field and the timer variables
   element.textContent = value;
 
+  // update the timer variables based on the type
   switch (type) {
     case "focus":
       studyTime = value;
@@ -462,18 +523,21 @@ function adjustValue(type, operation) {
   }
 }
 
+// Play notification sound
 function playNotificationSound() {
   const audio = new Audio("assets/sounds/notif.mp3");
   audio.play();
   console.log("Notification sound played");
 }
 
+// Play achievement sound
 function playAchievementSound() {
   const audio = new Audio("assets/sounds/achievement.mp3");
   audio.play();
   console.log("Achievement sound played");
 }
 
+// Event listeners
 startPauseButton.addEventListener("click", toggleStartPause);
 quitButton.addEventListener("click", () => quitModal.classList.remove("hidden"));
 cancelQuitButton.addEventListener("click", () => quitModal.classList.add("hidden"));
@@ -498,6 +562,7 @@ notificationsOffButton.addEventListener("click", () => {
 updateTimerDisplay();
 cycleInfo.textContent = `Cycle ${cyclesCompleted + 1} out of ${cyclesPlanned}`;
 
+// Logout the user and redirect to the login page after clearing the user data from localStorage
 function logout() {
   localStorage.removeItem("user");
   window.location.href = "login.html";
@@ -531,5 +596,3 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   );
 });
-
-// playNotificationSound();

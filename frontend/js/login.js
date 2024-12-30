@@ -16,6 +16,7 @@ document.getElementById('login-form').addEventListener('submit', async function 
       localStorage.setItem('user', JSON.stringify(userData));
       showToast('Login successful! Redirecting...', 'success');
 
+      // Redirect to dashboard after successful login
       setTimeout(() => {
         window.location.href = 'timer.html';
       }, 1500);
