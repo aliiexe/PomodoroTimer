@@ -25,13 +25,13 @@ body {
 .auth-links a:last-child {
     width: 133px;
     height: 39px;
-    border: 2px solid #FF7070;
+    border: 2px solid #8C4DFE;
     border-radius: 10px;
     transition: 0.5s;
 }
 
 .auth-links a:last-child:hover {
-    background-color: #FF7070;
+    background-color: #8C4DFE;
     color: white;
 }
 
@@ -47,7 +47,7 @@ body {
 .line {
     width: 30px;
     height: 2px;
-    background-color: #FF7070;
+    background-color: #8C4DFE;
     transition: 0.5s;
 }
 
@@ -178,13 +178,13 @@ body {
 }
 
 .content a {
-    background: #FF7070;
+    background: #8C4DFE;
     transition: 0.5s;
     text-decoration: none;
 }
 
 .content a:hover {
-    background: #e95151;
+    background: #782EFF;
 }
 
 .blurred-background {
@@ -201,7 +201,7 @@ body {
     position: absolute;
     width: 150px;
     height: 150px;
-    background-color: #FF7070;
+    background-color: #8C4DFE;
     filter: blur(100px);
     border-radius: 50%;
     animation: move 8s infinite ease-in-out;

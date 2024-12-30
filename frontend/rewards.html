@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Badges - PeakFocus</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .badge-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .badge-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-6">
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-8">
+      <div>
+        <img src="assets/images/PeakFocus logo.svg" alt="PeakFocus Logo">
+      </div>
+      <nav class="flex space-x-6 items-center">
+        <a href="dashboard.html" class="text-gray-600 hover:text-black">Dashboard</a>
+        <a href="timer.html" class="text-gray-600 hover:text-black">Timer</a>
+        <button onclick="logout()" id="logout-btn" class="border border-purple-600 text-purple-600 px-4 py-1 rounded-lg hover:bg-purple-100">Log out</button>
+      </nav>
+    </header>
+
+    <!-- Badges Section -->
+    <main>
+      <h1 class="text-3xl font-semibold mb-6 text-center">Your Badges</h1>
+      <div id="badges-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Badges will be dynamically inserted here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Include Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/rewards.js"></script>
+</body>
+</html>

@@ -1,11 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro timer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomodoro Timer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/timer.css">
+  <style>
+    /* Custom purple color inline */
+    .btn-purple {
+      background-color: #7b61ff;
+    }
+
+    .btn-purple:hover {
+      background-color: #684ee0;
+    }
+
+    .btn-gray {
+      background-color: #f1f1f1;
+      color: #333;
+    }
+
+    .btn-gray:hover {
+      background-color: #e1e1e1;
+    }
+  </style>
 </head>
-<body>
-    
+<body class="bg-gray-50 font-sans">
+  <div class="max-w-7xl mx-auto p-6">
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-8">
+      <div>
+        <img src="assets/images/PeakFocus logo.svg" alt="PeakFocus Logo">
+      </div>
+      <nav class="flex space-x-6 items-center">
+        <a href="dashboard.html" class="text-gray-600 hover:text-black">Dashboard</a>
+        <a href="rewards.html" class="text-gray-600 hover:text-black">Rewards</a>
+        <button onclick="logout()" id="logout-btn" class="border border-purple-600 text-purple-600 px-4 py-1 rounded-lg hover:bg-purple-100">Log out</button>
+      </nav>
+    </header>
+
+    <!-- Main Section -->
+    <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Timer Card -->
+      <div class="container">
+        <div class="bg-white shadow-md rounded-lg p-8 flex flex-col items-center justify-center h-full">
+          <h2 class="text-center text-lg font-semibold mb-4 pomo">Pomodoro timer</h2>
+          <p id="goal-display" class="text-center text-gray-500 mb-8 hidden">Study Data Structures</p>
+          <div id="timer-display" class="text-center text-6xl font-bold mb-6">00:00</div>
+          <div class="flex justify-center space-x-4">
+            <button id="start-pause-btn" class="btn-purple text-white px-6 py-2 rounded-lg">Start</button>
+            <button id="quit-btn" class="btn-purple text-white px-6 py-2 rounded-lg">Quit</button>
+          </div>
+          <p id="cycle-info" class="text-center text-gray-600 mt-6 hidden">Cycle 0 out of 0</p>
+        </div>
+      </div>
+
+      <!-- Goal Configuration Card -->
+      <div class="bg-white shadow-md rounded-lg p-10">
+        <h2 class="text-center text-lg font-semibold mb-4 label">Goal</h2>
+        <input type="text" id="goal-name" placeholder="Goal name ex: Study Algebra, Read a book..."
+          class="w-full mb-6 p-3 border rounded-md focus:ring-2 focus:ring-purple-600 focus:outline-none">
+        <div class="grid grid-cols-2 gap-6">
+          <!-- Focus Session -->
+          <div class="text-center">
+            <p class="label">Focus session</p>
+            <div class="flex items-center justify-center space-x-6 mt-3">
+              <button class="btn-purple text-white w-10 h-10 rounded-md text-lg btns" onclick="adjustValue('focus', '-')">-</button>
+              <span id="focus-time" class="text-lg font-bold">25</span>
+              <button class="btn-purple text-white w-10 h-10 rounded-md text-lg btns" onclick="adjustValue('focus', '+')">+</button>
+            </div>
+            <p class="-mt-1 text-sm text-gray-500 txt">mins</p>
+          </div>
+          <!-- Short Break -->
+          <div class="text-center">
+            <p class="label">Short Break</p>
+            <div class="flex items-center justify-center space-x-6 mt-3">
+              <button class="btn-purple text-white w-10 h-10 rounded-md text-lg btns" onclick="adjustValue('break', '-')">-</button>
+              <span id="break-time" class="text-lg font-bold">5</span>
+              <button class="btn-purple text-white w-10 h-10 rounded-md text-lg btns" onclick="adjustValue('break', '+')">+</button>
+            </div>
+            <p class="-mt-1 text-sm text-gray-500 txt">mins</p>
+          </div>
+          <!-- Cycles -->
+          <div class="text-center">
+            <p class="label">Cycles</p>
+            <div class="flex items-center justify-center space-x-6 mt-3">
+              <button class="btn-purple text-white w-10 h-10 rounded-md text-lg btns" onclick="adjustValue('cycles', '-')">-</button>
+              <span id="cycles" class="text-lg font-bold">1</span>
+              <button class="btn-purple text-white w-10 h-10 rounded-md text-lg btns" onclick="adjustValue('cycles', '+')">+</button>
+            </div>
+          </div>
+          <!-- Break After -->
+          <div class="text-center">
+            <p class="label">Break after</p>
+            <div class="flex items-center justify-center space-x-6 mt-3">
+              <button class="btn-purple text-white w-10 h-10 rounded-md text-lg btns" onclick="adjustValue('breakAfter', '-')">-</button>
+              <span id="break-after" class="text-lg font-bold">1</span>
+              <button class="btn-purple text-white w-10 h-10 rounded-md text-lg btns" onclick="adjustValue('breakAfter', '+')">+</button>
+            </div>
+            <p class="-mt-1- text-sm text-gray-500 txt">cycles</p>
+          </div>
+        </div>
+        <!-- Notifications -->
+        <div class="mt-6 flex justify-between items-center">
+          <p class="mb-2 label">Notifications</p>
+          <div class="flex justify-center space-x-4">
+            <button id="notifications-off" class="px-6 py-2 rounded-lg bg-gray-200 text-white onoff">OFF</button>
+            <button id="notifications-on" class="btn-purple text-white px-6 py-2 rounded-lg onoff">ON</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Quit Confirmation Modal -->
+  <div id="quit-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-lg font-semibold mb-4">Confirm Quit</h2>
+      <p class="mb-6">Are you sure you want to quit the current session?</p>
+      <div class="flex justify-end space-x-4">
+        <button id="cancel-quit" class="btn-gray px-4 py-2 rounded-lg">Cancel</button>
+        <button id="confirm-quit" class="btn-purple text-white px-4 py-2 rounded-lg">Quit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <img id="toast-image" src="" alt="Badge Image">
+    <p id="toast-message"></p>
+  </div>
+
+  <!-- Include Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/timer.js"></script>
 </body>
 </html>

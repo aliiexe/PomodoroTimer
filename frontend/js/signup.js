@@ -8,12 +8,11 @@ document.getElementById('signup-form').addEventListener('submit', async function
 
   // Check if passwords match
   if (password !== confirmPassword) {
-    alert('Passwords do not match');
+    showToast('Passwords do not match', 'error');
     return;
   }
 
   try {
-    // Send a POST request to the backend to create the user
     const response = await axios.post('http://localhost:5000/api/users', {
       username: name,
       email,
@@ -21,13 +20,29 @@ document.getElementById('signup-form').addEventListener('submit', async function
     });
 
     if (response.status === 201) {
-      alert('User created successfully! Please login.');
-      window.location.href = 'login.html'; // Redirect to login page
+      showToast('User created successfully! Redirecting to login...', 'success');
+
+      setTimeout(() => {
+        window.location.href = 'login.html'; // Redirect to login page
+      }, 1500);
     } else {
-      alert('Sign up failed');
+      showToast('Sign up failed. Please try again.', 'error');
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('An error occurred while signing up');
+    showToast('An error occurred while signing up. Please try again.', 'error');
   }
 });
+
+// Toast notification function
+function showToast(message, type) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded shadow ${
+    type === 'success' ? 'bg-green-500' : 'bg-[#782EFF]'
+  }`;
+  toast.style.display = 'block';
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3000);
+}

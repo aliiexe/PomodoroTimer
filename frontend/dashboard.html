@@ -3,78 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pomodoro Timer Dashboard</title>
+  <title>Dashboard - PeakFocus</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
-  <!-- Navbar -->
-  <nav class="bg-blue-600 text-white p-4 shadow-lg">
-    <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-bold">Pomodoro Dashboard</h1>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-6">
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-8">
       <div>
-        <a href="#" class="px-4 py-2 bg-blue-700 rounded hover:bg-blue-800">Home</a>
-        <a href="#" class="px-4 py-2 bg-blue-700 rounded hover:bg-blue-800">Settings</a>
+        <img src="assets/images/PeakFocus logo.svg" alt="PeakFocus Logo">
       </div>
-    </div>
-  </nav>
+      <nav class="flex space-x-6 items-center">
+        <a href="timer.html" class="text-gray-600 hover:text-black">Timer</a>
+        <a href="rewards.html" class="text-gray-600 hover:text-black">Rewards</a>
+        <button onclick="logout()" id="logout-btn" class="border border-purple-600 text-purple-600 px-4 py-1 rounded-lg hover:bg-purple-100">Log out</button>
+      </nav>
+    </header>
 
-  <!-- Dashboard Content -->
-  <div class="container mx-auto mt-8">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6">Welcome Back!</h2>
-
-    <!-- Stats Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Total Sessions -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-xl font-bold text-gray-700">Total Sessions</h3>
-        <p id="total-sessions" class="text-4xl font-extrabold text-blue-600">0</p>
-      </div>
-
-      <!-- Total Rewards -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-xl font-bold text-gray-700">Total Rewards</h3>
-        <p id="total-rewards" class="text-4xl font-extrabold text-green-600">0</p>
+    <!-- Dashboard Statistics -->
+    <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Total Study Time -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Total Study Time</h2>
+        <p id="total-study-time" class="text-4xl font-bold text-[#8C4DFE]">0 hrs</p>
       </div>
 
-      <!-- Productivity Score -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-xl font-bold text-gray-700">Productivity Score</h3>
-        <p id="productivity-score" class="text-4xl font-extrabold text-yellow-600">0</p>
+      <!-- Total Break Time -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Total Break Time</h2>
+        <p id="total-break-time" class="text-4xl font-bold text-[#8C4DFE]">0 hrs</p>
       </div>
 
-      <!-- Goals Achieved -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-xl font-bold text-gray-700">Goals Achieved</h3>
-        <p id="goals-achieved" class="text-4xl font-extrabold text-purple-600">0</p>
+      <!-- Sessions Completed -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Sessions Completed</h2>
+        <p id="sessions-completed" class="text-4xl font-bold text-[#8C4DFE]">0</p>
       </div>
-    </div>
+
+      <!-- Sessions Abandoned -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Sessions Abandoned</h2>
+        <p id="sessions-abandoned" class="text-4xl font-bold text-[#8C4DFE]">0</p>
+      </div>
+
+      <!-- Current Streak -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Current Streak</h2>
+        <p id="current-streak" class="text-4xl font-bold text-[#8C4DFE]">0 days</p>
+      </div>
+
+      <!-- Best Streak -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Best Streak</h2>
+        <p id="best-streak" class="text-4xl font-bold text-[#8C4DFE]">0 days</p>
+      </div>
+
+      <!-- Goals Progress -->
+      <div class="bg-white shadow-md rounded-lg p-6 col-span-1 md:col-span-2 lg:col-span-3">
+        <h2 class="text-lg font-semibold mb-4">Goals Progress</h2>
+        <div id="goals-progress" class="w-full h-64"></div>
+      </div>
+
+      <!-- Daily Productivity Chart -->
+      <div class="bg-white shadow-md rounded-lg p-6 col-span-1 md:col-span-2 lg:col-span-3">
+        <h2 class="text-lg font-semibold mb-4">Daily Productivity</h2>
+        <div id="daily-productivity-chart" class="w-full h-64"></div>
+      </div>
+    </main>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-gray-800 text-white text-center py-4 mt-8">
-    <p>&copy; 2024 Pomodoro Timer. All rights reserved.</p>
-  </footer>
-
-  <!-- JavaScript -->
-  <script>
-    // Fetch data from the API
-    async function fetchData() {
-      try {
-        const response = await fetch("http://localhost:5000/api/productivity");
-        const data = await response.json();
-
-        // Update the dashboard with fetched data
-        document.getElementById("total-sessions").textContent = data.totalSessions || 0;
-        document.getElementById("total-rewards").textContent = data.totalRewards || 5;
-        document.getElementById("productivity-score").textContent = data.productivityScore || 0;
-        document.getElementById("goals-achieved").textContent = data.goalsAchieved || 0;
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-
-    // Call fetchData on page load
-    fetchData();
-  </script>
+  <!-- Include ApexCharts -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
 </html>
