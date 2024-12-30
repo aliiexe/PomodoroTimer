@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Badges - PeakFocus</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/styles.css">
   <style>
     .badge-card {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -15,20 +14,87 @@
       transform: translateY(-10px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+
+    .line {
+      width: 30px;
+      height: 2px;
+      background-color: #8C4DFE;
+      transition: 0.5s;
+    }
+
+    .nav-menu {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .nav-menu.active {
+      display: flex;
+    }
+
+    .hamburger.active .line:nth-child(1) {
+      transform: rotate(45deg) translate(9px, 5px);
+    }
+
+    .hamburger.active .line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active .line:nth-child(3) {
+      transform: rotate(-45deg) translate(9px, -5px);
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .auth-links {
+        display: none;
+      }
+    }
   </style>
 </head>
-<body class="bg-gray-100">
-  <div class="container mx-auto p-6">
+<body class="bg-gray-50 font-sans">
+  <div class="max-w-7xl mx-auto p-6">
     <!-- Header -->
     <header class="flex justify-between items-center mb-8">
       <div>
         <img src="assets/images/PeakFocus logo.svg" alt="PeakFocus Logo">
       </div>
-      <nav class="flex space-x-6 items-center">
+      <nav class="hidden md:flex space-x-6 items-center auth-links">
         <a href="dashboard.html" class="text-gray-600 hover:text-black">Dashboard</a>
         <a href="timer.html" class="text-gray-600 hover:text-black">Timer</a>
+        <a href="goals.html" class="text-gray-600 hover:text-black">Goals</a>
         <button onclick="logout()" id="logout-btn" class="border border-purple-600 text-purple-600 px-4 py-1 rounded-lg hover:bg-purple-100">Log out</button>
       </nav>
+      <div class="hamburger md:hidden">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+      <div class="nav-menu md:hidden">
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="timer.html" class="nav-link">Timer</a>
+        <a href="goals.html" class="nav-link">Goals</a>
+        <button onclick="logout()" id="logout-btn" class="border border-purple-600 text-purple-600 px-4 py-1 rounded-lg hover:bg-purple-100">Log out</button>
+      </div>
     </header>
 
     <!-- Badges Section -->
@@ -43,5 +109,23 @@
   <!-- Include Axios -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="js/rewards.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburger = document.querySelector('.hamburger');
+      const navMenu = document.querySelector('.nav-menu');
+
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+      });
+
+      document.querySelectorAll('.nav-link').forEach(link => 
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          navMenu.classList.remove('active');
+        })
+      );
+    });
+  </script>
 </body>
 </html>

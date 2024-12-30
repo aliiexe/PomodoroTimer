@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-*{
-    font-family: poppins;
+* {
+  font-family: poppins;
 }
 
 #timer-display {
@@ -16,7 +16,7 @@
   font-weight: 400;
 }
 
-#goal-display{
+#goal-display {
   color: #000;
   font-size: 16px;
   font-weight: 500;
@@ -28,33 +28,37 @@
   font-weight: 300;
 }
 
-#start-pause-btn, #quit-btn {
+#start-pause-btn,
+#quit-btn {
   width: 133px;
   height: 81px;
-  color: #FFF;
+  color: #fff;
   font-size: 25px;
   font-weight: 500;
 }
 
 .label {
-  color: #4F4F4F;
+  color: #4f4f4f;
   font-size: 20px;
   font-weight: 400;
 }
 
-.btns  {
+.btns {
   width: 47px;
   height: 47px;
 }
 
-#focus-time, #break-time, #cycles, #break-after {
+#focus-time,
+#break-time,
+#cycles,
+#break-after {
   color: #000;
   font-size: 20px;
   font-weight: 600;
 }
 
 .txt {
-  color: #4F4F4F;
+  color: #4f4f4f;
   font-size: 15px;
   font-weight: 400;
 }
@@ -95,4 +99,119 @@
   margin: 0;
   font-size: 16px;
   color: #333;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.line {
+  width: 30px;
+  height: 2px;
+  background-color: #8c4dfe;
+  transition: 0.5s;
+}
+
+.nav-menu {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.nav-menu.active {
+  display: flex;
+}
+
+.hamburger.active .line:nth-child(1) {
+  transform: rotate(45deg) translate(9px, 5px);
+}
+
+.hamburger.active .line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active .line:nth-child(3) {
+  transform: rotate(-45deg) translate(9px, -5px);
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .auth-links {
+    display: none;
+  }
+
+  #timer-display {
+    font-size: 80px;
+  }
+
+  .pomo {
+    font-size: 20px;
+  }
+
+  #goal-display {
+    font-size: 14px;
+  }
+
+  #cycle-info {
+    font-size: 20px;
+  }
+
+  #start-pause-btn,
+  #quit-btn {
+    width: 100px;
+    height: 60px;
+    font-size: 20px;
+  }
+
+  .label {
+    font-size: 18px;
+  }
+
+  .btns {
+    width: 40px;
+    height: 40px;
+  }
+
+  #focus-time,
+  #break-time,
+  #cycles,
+  #break-after {
+    font-size: 18px;
+  }
+
+  .txt {
+    font-size: 14px;
+  }
+
+  .onoff {
+    width: 90px;
+    height: 36px;
+  }
+
+  .notifications-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .onoff {
+    width: 80px;
+    height: 36px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
 }

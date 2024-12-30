@@ -62,6 +62,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 10px;
+    z-index: 2;
 }
 
 .nav-menu.active {

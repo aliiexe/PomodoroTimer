@@ -33,11 +33,23 @@
       <div>
         <img src="assets/images/PeakFocus logo.svg" alt="PeakFocus Logo">
       </div>
-      <nav class="flex space-x-6 items-center">
+      <nav class="hidden md:flex space-x-6 items-center auth-links">
         <a href="dashboard.html" class="text-gray-600 hover:text-black">Dashboard</a>
         <a href="rewards.html" class="text-gray-600 hover:text-black">Rewards</a>
+        <a href="goals.html" class="text-gray-600 hover:text-black">Goals</a>
         <button onclick="logout()" id="logout-btn" class="border border-purple-600 text-purple-600 px-4 py-1 rounded-lg hover:bg-purple-100">Log out</button>
       </nav>
+      <div class="hamburger md:hidden">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+      <div class="nav-menu md:hidden">
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="rewards.html" class="nav-link">Rewards</a>
+        <a href="goals.html" class="nav-link">Goals</a>
+        <button onclick="logout()" id="logout-btn" class="border border-purple-600 text-purple-600 px-4 py-1 rounded-lg hover:bg-purple-100">Log out</button>
+      </div>
     </header>
 
     <!-- Main Section -->
@@ -57,11 +69,11 @@
       </div>
 
       <!-- Goal Configuration Card -->
-      <div class="bg-white shadow-md rounded-lg p-10">
+      <div class="bg-white shadow-md rounded-lg p-6 md:p-10">
         <h2 class="text-center text-lg font-semibold mb-4 label">Goal</h2>
         <input type="text" id="goal-name" placeholder="Goal name ex: Study Algebra, Read a book..."
           class="w-full mb-6 p-3 border rounded-md focus:ring-2 focus:ring-purple-600 focus:outline-none">
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <!-- Focus Session -->
           <div class="text-center">
             <p class="label">Focus session</p>
@@ -99,11 +111,11 @@
               <span id="break-after" class="text-lg font-bold">1</span>
               <button class="btn-purple text-white w-10 h-10 rounded-md text-lg btns" onclick="adjustValue('breakAfter', '+')">+</button>
             </div>
-            <p class="-mt-1- text-sm text-gray-500 txt">cycles</p>
+            <p class="-mt-1 text-sm text-gray-500 txt">cycles</p>
           </div>
         </div>
         <!-- Notifications -->
-        <div class="mt-6 flex justify-between items-center">
+        <div class="mt-6 flex flex-col sm:flex-row justify-between items-center">
           <p class="mb-2 label">Notifications</p>
           <div class="flex justify-center space-x-4">
             <button id="notifications-off" class="px-6 py-2 rounded-lg bg-gray-200 text-white onoff">OFF</button>

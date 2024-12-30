@@ -56,8 +56,14 @@ function toggleStartPause() {
 
 async function startTimer() {
   if (isRunning) return;
-  isRunning = true;
 
+  const goalName = document.getElementById("goal-name").value;
+  if (!goalName && !goalId) {
+    showToast("Please set a goal first.", "assets/images/no.gif");
+    return;
+  }
+
+  isRunning = true;
   console.log("Timer started");
 
   goalDisplay.classList.remove("hidden");
@@ -65,9 +71,6 @@ async function startTimer() {
 
   startPauseButton.textContent = "Pause";
 
-  const goalName = document.getElementById("goal-name").value;
-  let goal = document.getElementById("goal-name");
-  goal.value = "";
   if (goalName && !goalId) {
     try {
       const response = await axios.post(`${API_BASE_URL}/goals`, {
@@ -241,7 +244,13 @@ async function handleSessionCompletion() {
 
   if (currentSessionType === "focus") {
     console.log(`Focus session completed. Cycles completed: ${cyclesCompleted}`);
-    if (cyclesCompleted % breakAfter === 0 && cyclesCompleted !== cyclesPlanned) {
+    if (cyclesPlanned === 1) {
+      // Skip rest time if only one cycle is planned
+      cyclesCompleted++;
+      currentSessionType = "focus";
+      remainingTime = studyTime * 60;
+      console.log("Single cycle completed, skipping rest time");
+    } else if (cyclesCompleted % breakAfter === 0 && cyclesCompleted !== cyclesPlanned) {
       currentSessionType = "break";
       remainingTime = restTime * 60;
       console.log("Starting short break");
@@ -310,49 +319,81 @@ async function handleSessionCompletion() {
       const productivityEntries = productivityResponse.data;
       const isFirstSession = productivityEntries.length === 1;
 
-      let rewardId;
-      let rewardMessage = "You completed your focus session and goal!";
-      let rewardImage = "";
-
+      let rewards = [];
       if (isFirstSession) {
-        rewardId = '67717d319594a1dae10556b1';
-        rewardMessage = "First Session Badge";
-        rewardImage = "assets/images/badge1.png";
-      } else if (productivityEntries.length === 25) {
-        rewardId = '6771cbc74e7860685cb8a5e7';
-        rewardMessage = "First 25 Mins Session Complete";
-        rewardImage = "assets/images/badge2.png";
-      } else if (productivityEntries.length === 5) {
-        rewardId = '6771cbde4e7860685cb8a5e9';
-        rewardMessage = "5 Sessions Completed";
-        rewardImage = "assets/images/badge3.png";
-      } else if (productivityEntries.length === 10) {
-        rewardId = '6771cbec4e7860685cb8a5eb';
-        rewardMessage = "10 Sessions Completed";
-        rewardImage = "assets/images/badge4.png";
-      } else {
-        rewardId = null;
+        rewards.push({
+          id: '67717d319594a1dae10556b1',
+          message: "First Session Badge",
+          image: "assets/images/badge1.png"
+        });
+      }
+      if (productivityEntries.length === 25 && cyclesCompleted >= cyclesPlanned) {
+        rewards.push({
+          id: '6771cbc74e7860685cb8a5e7',
+          message: "First 25 Mins Session Complete",
+          image: "assets/images/badge2.png"
+        });
+      }
+      if (productivityEntries.length === 5 && cyclesCompleted >= cyclesPlanned) {
+        rewards.push({
+          id: '6771cbde4e7860685cb8a5e9',
+          message: "5 Sessions Completed",
+          image: "assets/images/badge3.png"
+        });
+      }
+      if (productivityEntries.length === 10 && cyclesCompleted >= cyclesPlanned) {
+        rewards.push({
+          id: '6771cbec4e7860685cb8a5eb',
+          message: "10 Sessions Completed",
+          image: "assets/images/badge4.png"
+        });
       }
 
-      if (rewardId) {
-        await axios.put(`${API_BASE_URL}/users/${user._id}/rewards/${rewardId}`);
-        console.log("Reward assigned:", rewardId);
-        showToast(rewardMessage, rewardImage);
-      } else {
+      for (const reward of rewards) {
+        await axios.put(`${API_BASE_URL}/users/${user._id}/rewards/${reward.id}`);
+        playAchievementSound();
+        console.log("Reward assigned:", reward.id);
+        await showToastSequentially(reward.message, reward.image);
+      }
+
+      if (rewards.length === 0) {
         showToast("You completed your focus session and goal!", "assets/images/check.gif");
         console.log("No reward assigned for this session count.");
       }
 
       // Reset and hide elements
+      playNotificationSound();
       resetTimer();
     } catch (error) {
       console.error("Error updating productivity or goal:", error);
       showToast("An error occurred while updating productivity or goal.", "assets/images/error.png");
     }
   } else {
+    playNotificationSound();
     updateTimerDisplay();
     startTimer();
   }
+}
+
+function showToastSequentially(message, imageUrl) {
+  return new Promise((resolve) => {
+    showToast(message, imageUrl);
+    setTimeout(resolve, 5000); // Show the toast for 5 seconds before resolving the promise
+  });
+}
+
+function showToastSequentially(message, imageUrl) {
+  return new Promise((resolve) => {
+    showToast(message, imageUrl);
+    setTimeout(resolve, 5000); // Show the toast for 5 seconds before resolving the promise
+  });
+}
+
+function showToastSequentially(message, imageUrl) {
+  return new Promise((resolve) => {
+    showToast(message, imageUrl);
+    setTimeout(resolve, 5000); // Show the toast for 5 seconds before resolving the promise
+  });
 }
 
 function resetTimer() {
@@ -422,9 +463,15 @@ function adjustValue(type, operation) {
 }
 
 function playNotificationSound() {
-  const audio = new Audio("../assets/sounds/notif.mp3");
+  const audio = new Audio("assets/sounds/notif.mp3");
   audio.play();
   console.log("Notification sound played");
+}
+
+function playAchievementSound() {
+  const audio = new Audio("assets/sounds/achievement.mp3");
+  audio.play();
+  console.log("Achievement sound played");
 }
 
 startPauseButton.addEventListener("click", toggleStartPause);
@@ -469,3 +516,20 @@ function showToast(message, imageUrl) {
     toast.classList.remove('show');
   }, 5000); // Show the toast for 5 seconds
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const hamburger = document.querySelector('.hamburger');
+  const navMenu = document.querySelector('.nav-menu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+  });
+  document.querySelectorAll('.nav-link').forEach(link => 
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navMenu.classList.remove('active');
+    })
+  );
+});
+
+// playNotificationSound();
