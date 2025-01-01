@@ -1,6 +1,3 @@
-// let's add desribing comments to the code to make it more readable and understandable
-
-
 // Get user data from localStorage
 const user = JSON.parse(localStorage.getItem("user")) || {};
 if (user._id) {
@@ -23,7 +20,7 @@ let cyclesCompleted = 0;
 let breakAfter = 0;
 let currentSessionType = "focus";
 let remainingTime = studyTime * 60;
-let notificationsEnabled = false;
+let notificationsEnabled = true;
 let goalId = null;
 
 // Get DOM elements
@@ -61,6 +58,18 @@ function toggleStartPause() {
     pauseTimer();
   } else {
     startTimer();
+  }
+}
+
+// Function to update the timer status display
+function updateTimerStatus() {
+  const timerStatus = document.getElementById('timer-status');
+  if (currentSessionType === "focus") {
+    timerStatus.textContent = 'Focus Time 📖';
+  } else if (currentSessionType === "break") {
+    timerStatus.textContent = 'Break Time ☕';
+  } else {
+    timerStatus.textContent = `Session ${cyclesCompleted + 1}`;
   }
 }
 
@@ -106,6 +115,9 @@ async function startTimer() {
 
   // Update the cycle info at the beginning of each cycle
   cycleInfo.textContent = `Cycle ${cyclesCompleted + 1} out of ${cyclesPlanned}`;
+
+  // Update the timer status
+  updateTimerStatus();
 
   // Start the timer interval
   timerInterval = setInterval(() => {
@@ -525,16 +537,20 @@ function adjustValue(type, operation) {
 
 // Play notification sound
 function playNotificationSound() {
-  const audio = new Audio("assets/sounds/notif.mp3");
-  audio.play();
-  console.log("Notification sound played");
+  if (notificationsEnabled === true) {
+    const audio = new Audio("assets/sounds/notif.mp3");
+    audio.play();
+    console.log("Notification sound played");
+  }
 }
 
 // Play achievement sound
 function playAchievementSound() {
-  const audio = new Audio("assets/sounds/achievement.mp3");
-  audio.play();
-  console.log("Achievement sound played");
+  if (notificationsEnabled === true) {
+    const audio = new Audio("assets/sounds/achievement.mp3");
+    audio.play();
+    console.log("Achievement sound played");
+  }
 }
 
 // Event listeners

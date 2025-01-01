@@ -1,0 +1,71 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+  }
+
+  .loader-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .loader {
+      width: 90px;
+      height: 90px;
+    animation: spin 3s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .blurred-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+  }
+
+  .blurred-circle {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      background-color: #8C4DFE;
+      filter: blur(100px);
+      border-radius: 50%;
+      animation: move 8s infinite ease-in-out;
+  }
+
+  @keyframes move {
+      0%, 100% {
+      transform: translate(0, 0);
+      }
+      25% {
+      transform: translate(50px, -50px);
+      }
+      50% {
+      transform: translate(-50px, 50px);
+      }
+      75% {
+      transform: translate(-100px, -100px);
+      }
+  }
+
+  @media (max-width: 768px) {
+      .blurred-circle {
+      width: 100px;
+      height: 100px;
+      }
+  }
