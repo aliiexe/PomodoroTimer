@@ -131,6 +131,10 @@ body {
     .auth-links {
         display: none;
     }
+
+    #language-selector{
+        display: none;
+    }
     
     .header {
         padding: 20px 20px;
