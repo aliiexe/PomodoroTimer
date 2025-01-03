@@ -1,5 +1,7 @@
 # Pomodoro Timer
 
+![Pomodoro Timer](frontend/assets/images/image.png)
+
 ## Overview
 The Pomodoro Timer is a time management tool that helps you break work into intervals, traditionally 25 minutes in length, separated by short breaks. This project aims to implement a simple and effective Pomodoro Timer using web technologies.
 
@@ -8,6 +10,7 @@ The Pomodoro Timer is a time management tool that helps you break work into inte
 - Customizable work and break intervals
 - Audio notifications for work and break periods
 - Visual progress indicator
+- Spotify integration for background music in the timer interface
 
 ## Technologies Used
 - HTML
