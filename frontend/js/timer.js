@@ -7,6 +7,16 @@ if (user._id) {
   console.log("User not logged in");
 }
 
+document.addEventListener('DOMContentLoaded', async () => {
+  const userId = user._id;
+
+  try {
+    await updateStreak(userId);
+  } catch (error) {
+    console.error("Error initializing app:", error);
+  }
+});
+
 // Define the base URL for the API
 const API_BASE_URL = "http://localhost:5000/api";
 
@@ -62,8 +72,8 @@ function toggleStartPause() {
 }
 
 // Function to update the timer status display
+const timerStatus = document.getElementById('timer-status');
 function updateTimerStatus() {
-  const timerStatus = document.getElementById('timer-status');
   if (currentSessionType === "focus") {
     timerStatus.textContent = 'Focus Time 📖';
   } else if (currentSessionType === "break") {
@@ -93,6 +103,7 @@ async function startTimer() {
   // Show the goal name and cycle info
   goalDisplay.classList.remove("hidden");
   cycleInfo.classList.remove("hidden");
+  timerStatus.classList.remove("hidden");
 
   // Update the start/pause button text
   startPauseButton.textContent = "Pause";
@@ -165,23 +176,62 @@ async function quitTimer() {
   }
 }
 
-// async function handleSessionCompletion() {
-//   if (notificationsEnabled) {
-//     playNotificationSound();
-//   }
+// Play notification sound
+function playNotificationSound() {
+  if (notificationsEnabled === true) {
+    const audio = new Audio("assets/sounds/notif.mp3");
+    audio.play();
+    console.log("Notification sound played");
+  }
+}
 
+// Play achievement sound
+function playAchievementSound() {
+  if (notificationsEnabled === true) {
+    const audio = new Audio("assets/sounds/achievement.mp3");
+    audio.play().then(() => {
+      console.log("Achievement sound played");
+    }).catch(error => {
+      console.error("Error playing achievement sound:", error);
+    });
+  }else{
+    console.log("Notifications are disabled");
+  }
+}
+
+// Handle session completion
+// async function handleSessionCompletion() {
+  
+//   // Check if the current session is a focus session
 //   if (currentSessionType === "focus") {
 //     console.log(`Focus session completed. Cycles completed: ${cyclesCompleted}`);
-//     if (cyclesCompleted % breakAfter === 0 && cyclesCompleted !== cyclesPlanned) {
+//     if (cyclesPlanned === 1) {
+//       // Skip rest time if only one cycle is planned
+//       cyclesCompleted++;
+//       currentSessionType = "focus";
+//       remainingTime = studyTime * 60;
+//       restTime = 0;
+//       console.log("Single cycle completed, skipping rest time");
+//     } else if (cyclesCompleted % breakAfter === 0 && cyclesCompleted !== cyclesPlanned - 1) {
+//       // Start a short break after the specified number of cycles, but not if it's the last cycle
 //       currentSessionType = "break";
 //       remainingTime = restTime * 60;
 //       console.log("Starting short break");
 //     } else {
-//       currentSessionType = "break";
-//       remainingTime = restTime * 60;
-//       console.log("Starting short break");
+//       // Start a short break after each focus session, but not if it's the last cycle
+//       if (cyclesCompleted !== cyclesPlanned - 1) {
+//         currentSessionType = "break";
+//         remainingTime = restTime * 60;
+//         console.log("Starting short break");
+//       } else {
+//         cyclesCompleted++;
+//         currentSessionType = "focus";
+//         remainingTime = studyTime * 60;
+//         console.log("Starting focus session");
+//       }
 //     }
 //   } else {
+//     // Start a focus session after each break
 //     cyclesCompleted++;
 //     currentSessionType = "focus";
 //     remainingTime = studyTime * 60;
@@ -191,16 +241,19 @@ async function quitTimer() {
 //   // Update cycle info at the beginning of each cycle
 //   cycleInfo.textContent = `Cycle ${cyclesCompleted + 1} out of ${cyclesPlanned}`;
 
-//   if (cyclesCompleted >= cyclesPlanned) {
+//   // Update productivity stats and goal progress after completing all cycles
+//   if (cyclesCompleted >= cyclesPlanned) { // Check if all cycles are completed
 //     try {
+//       // Update productivity stats
 //       const userResponse = await axios.get(`${API_BASE_URL}/users/${user._id}`);
 //       const userData = userResponse.data; // Use a different variable name
 //       const lastSessionDate = userData.lastSessionDate ? new Date(userData.lastSessionDate) : null;
 //       const currentDate = new Date();
 //       const isConsecutiveDay = lastSessionDate && (currentDate - lastSessionDate) / (1000 * 60 * 60 * 24) === 1;
 
-//       let streak = userData.streak;
-//       let bestStreak = userData.bestStreak;
+//       // Update streak and best streak
+//       let streak = userData.streak || 0;
+//       let bestStreak = userData.bestStreak || 0;
 
 //       if (isConsecutiveDay) {
 //         streak++;
@@ -212,6 +265,7 @@ async function quitTimer() {
 //         bestStreak = streak;
 //       }
 
+//       // Update productivity stats
 //       await axios.post(`${API_BASE_URL}/productivity`, {
 //         userId: user._id,
 //         totalStudyTime: cyclesCompleted * studyTime * 60,
@@ -223,12 +277,14 @@ async function quitTimer() {
 //       });
 //       console.log("Productivity stats updated");
 
+//       // Update user data
 //       await axios.put(`${API_BASE_URL}/users/${user._id}`, {
 //         lastSessionDate: currentDate,
 //         streak,
 //         bestStreak,
 //       });
 
+//       // Update goal progress and status
 //       if (goalId) {
 //         await axios.put(`${API_BASE_URL}/goals/${goalId}`, {
 //           progress: cyclesCompleted * studyTime * 60,
@@ -237,48 +293,121 @@ async function quitTimer() {
 //         console.log("Goal progress updated");
 //       }
 
+//       // Assign rewards based on productivity stats
 //       const productivityResponse = await axios.get(`${API_BASE_URL}/productivity?userId=${user._id}`);
 //       const productivityEntries = productivityResponse.data;
 //       const isFirstSession = productivityEntries.length === 1;
 
-//       let rewardId;
+//       // Define rewards based on productivity stats
+//       let rewards = [];
+//       // if it's the user's first session ever (no productivity entries exist) and 
+//       // all cycles are completed as planned (no abandoned sessions) he gets a badge for the first session
 //       if (isFirstSession) {
-//         rewardId = '67717d319594a1dae10556b1';
-//       } else if (productivityEntries.length === 25) {
-//         rewardId = '6771cbc74e7860685cb8a5e7';
-//       } else if (productivityEntries.length === 5) {
-//         rewardId = '6771cbde4e7860685cb8a5e9';
-//       } else if (productivityEntries.length === 10) {
-//         rewardId = '6771cbec4e7860685cb8a5eb';
-//       } else {
-//         rewardId = null;
+//         rewards.push({
+//           id: '67717d319594a1dae10556b1',
+//           message: "First Session Badge",
+//           image: "assets/images/Badge1.png"
+//         });
+//       }
+//       // if the user has completed 25 minutes of focus time and all cycles are completed as planned
+//       // he gets a badge for completing the first 25 minutes session
+//       if (productivityEntries.length === 25 && cyclesCompleted >= cyclesPlanned) {
+//         rewards.push({
+//           id: '6771cbc74e7860685cb8a5e7',
+//           message: "First 25 Mins Session Complete",
+//           image: "assets/images/Badge2.png"
+//         });
+//       }
+//       // if the user has completed 5 sessions and all cycles are completed as planned
+//       // he gets a badge for completing 5 sessions
+//       if (productivityEntries.length === 5 && cyclesCompleted >= cyclesPlanned) {
+//         rewards.push({
+//           id: '6771cbde4e7860685cb8a5e9',
+//           message: "5 Sessions Completed",
+//           image: "assets/images/Badge3.png"
+//         });
+//       }
+//       // if the user has completed 10 sessions and all cycles are completed as planned
+//       // he gets a badge for completing 10 sessions
+//       if (productivityEntries.length === 10 && cyclesCompleted >= cyclesPlanned) {
+//         rewards.push({
+//           id: '6771cbec4e7860685cb8a5eb',
+//           message: "10 Sessions Completed",
+//           image: "assets/images/Badge4.png"
+//         });
 //       }
 
-//       if (rewardId) {
-//         await axios.put(`${API_BASE_URL}/users/${user._id}/rewards/${rewardId}`);
-//         console.log("Reward assigned:", rewardId);
-//       } else {
+//       // Reset the timer
+//       resetTimer();
+
+//       // Assign rewards to the user
+//       for (const reward of rewards) {
+//         try {
+//           await axios.put(`${API_BASE_URL}/users/${user._id}/rewards/${reward.id}`);
+//           playAchievementSound();
+//           console.log("Reward assigned:", reward.id);
+//           await showToastSequentially(reward.message, reward.image);
+//         } catch (error) {
+//           console.error("Error assigning reward:", error);
+//         }
+//       }
+
+//       // If no rewards are assigned, show a message to the user saying that he completed his focus session and goal
+//       if (rewards.length === 0) {
+//         playNotificationSound();
+//         showToast("You completed your focus session and goal!", "assets/images/check.gif");
 //         console.log("No reward assigned for this session count.");
 //       }
 
-//       // Reset and hide elements
-//       resetTimer();
 //     } catch (error) {
+//       // if there's an error, log it to the console and show an error message to the user
 //       console.error("Error updating productivity or goal:", error);
+//       showToast("An error occurred while updating productivity or goal.", "assets/images/no.gif");
 //     }
 //   } else {
+//     // If all cycles are not completed, update the timer display and start the timer again
+//     playNotificationSound();
 //     updateTimerDisplay();
 //     startTimer();
 //   }
 // }
 
-// Handle session completion
-async function handleSessionCompletion() {
-  // Play notification sound if enabled
-  if (notificationsEnabled) {
-    playNotificationSound();
-  }
+async function updateStreak(userId) {
+  try {
+    const userResponse = await axios.get(`${API_BASE_URL}/users/${userId}`);
+    const userData = userResponse.data;
+    const lastSessionDate = userData.lastSessionDate ? new Date(userData.lastSessionDate) : null;
+    const currentDate = new Date();
+    const isConsecutiveDay = lastSessionDate && (currentDate - lastSessionDate) / (1000 * 60 * 60 * 24) === 1;
 
+    let streak = userData.streak || 0;
+    let bestStreak = userData.bestStreak || 0;
+
+    if (isConsecutiveDay) {
+      streak++;
+    } else {
+      streak = 1;
+    }
+
+    if (streak > bestStreak) {
+      bestStreak = streak;
+    }
+
+    await axios.put(`${API_BASE_URL}/users/${userId}`, {
+      lastSessionDate: currentDate,
+      streak,
+      bestStreak,
+    });
+
+    console.log("Streak updated:", { streak, bestStreak });
+    return { streak, bestStreak };
+  } catch (error) {
+    console.error("Error updating streak:", error);
+    throw error;
+  }
+}
+
+async function handleSessionCompletion() {
   // Check if the current session is a focus session
   if (currentSessionType === "focus") {
     console.log(`Focus session completed. Cycles completed: ${cyclesCompleted}`);
@@ -289,16 +418,23 @@ async function handleSessionCompletion() {
       remainingTime = studyTime * 60;
       restTime = 0;
       console.log("Single cycle completed, skipping rest time");
-    } else if (cyclesCompleted % breakAfter === 0 && cyclesCompleted !== cyclesPlanned) {
-      // Start a short break after the specified number of cycles
+    } else if (cyclesCompleted % breakAfter === 0 && cyclesCompleted !== cyclesPlanned - 1) {
+      // Start a short break after the specified number of cycles, but not if it's the last cycle
       currentSessionType = "break";
       remainingTime = restTime * 60;
       console.log("Starting short break");
     } else {
-      // Start a short break after each focus session
-      currentSessionType = "break";
-      remainingTime = restTime * 60;
-      console.log("Starting short break");
+      // Start a short break after each focus session, but not if it's the last cycle
+      if (cyclesCompleted !== cyclesPlanned - 1) {
+        currentSessionType = "break";
+        remainingTime = restTime * 60;
+        console.log("Starting short break");
+      } else {
+        cyclesCompleted++;
+        currentSessionType = "focus";
+        remainingTime = studyTime * 60;
+        console.log("Starting focus session");
+      }
     }
   } else {
     // Start a focus session after each break
@@ -315,27 +451,8 @@ async function handleSessionCompletion() {
   if (cyclesCompleted >= cyclesPlanned) { // Check if all cycles are completed
     try {
       // Update productivity stats
-      const userResponse = await axios.get(`${API_BASE_URL}/users/${user._id}`);
-      const userData = userResponse.data; // Use a different variable name
-      const lastSessionDate = userData.lastSessionDate ? new Date(userData.lastSessionDate) : null;
-      const currentDate = new Date();
-      const isConsecutiveDay = lastSessionDate && (currentDate - lastSessionDate) / (1000 * 60 * 60 * 24) === 1;
+      const { streak, bestStreak } = await updateStreak(user._id);
 
-      // Update streak and best streak
-      let streak = userData.streak || 0;
-      let bestStreak = userData.bestStreak || 0;
-
-      if (isConsecutiveDay) {
-        streak++;
-      } else {
-        streak = 1;
-      }
-
-      if (streak > bestStreak) {
-        bestStreak = streak;
-      }
-
-      // Update productivity stats
       await axios.post(`${API_BASE_URL}/productivity`, {
         userId: user._id,
         totalStudyTime: cyclesCompleted * studyTime * 60,
@@ -346,13 +463,6 @@ async function handleSessionCompletion() {
         bestStreak,
       });
       console.log("Productivity stats updated");
-
-      // Update user data
-      await axios.put(`${API_BASE_URL}/users/${user._id}`, {
-        lastSessionDate: currentDate,
-        streak,
-        bestStreak,
-      });
 
       // Update goal progress and status
       if (goalId) {
@@ -376,7 +486,7 @@ async function handleSessionCompletion() {
         rewards.push({
           id: '67717d319594a1dae10556b1',
           message: "First Session Badge",
-          image: "assets/images/badge1.png"
+          image: "assets/images/Badge1.png"
         });
       }
       // if the user has completed 25 minutes of focus time and all cycles are completed as planned
@@ -385,7 +495,7 @@ async function handleSessionCompletion() {
         rewards.push({
           id: '6771cbc74e7860685cb8a5e7',
           message: "First 25 Mins Session Complete",
-          image: "assets/images/badge2.png"
+          image: "assets/images/Badge2.png"
         });
       }
       // if the user has completed 5 sessions and all cycles are completed as planned
@@ -394,7 +504,7 @@ async function handleSessionCompletion() {
         rewards.push({
           id: '6771cbde4e7860685cb8a5e9',
           message: "5 Sessions Completed",
-          image: "assets/images/badge3.png"
+          image: "assets/images/Badge3.png"
         });
       }
       // if the user has completed 10 sessions and all cycles are completed as planned
@@ -403,7 +513,7 @@ async function handleSessionCompletion() {
         rewards.push({
           id: '6771cbec4e7860685cb8a5eb',
           message: "10 Sessions Completed",
-          image: "assets/images/badge4.png"
+          image: "assets/images/Badge4.png"
         });
       }
 
@@ -412,26 +522,27 @@ async function handleSessionCompletion() {
 
       // Assign rewards to the user
       for (const reward of rewards) {
-        await axios.put(`${API_BASE_URL}/users/${user._id}/rewards/${reward.id}`);
-        playAchievementSound();
-        console.log("Reward assigned:", reward.id);
-        await showToastSequentially(reward.message, reward.image);
+        try {
+          await axios.put(`${API_BASE_URL}/users/${user._id}/rewards/${reward.id}`);
+          playAchievementSound();
+          console.log("Reward assigned:", reward.id);
+          await showToastSequentially(reward.message, reward.image);
+        } catch (error) {
+          console.error("Error assigning reward:", error);
+        }
       }
 
       // If no rewards are assigned, show a message to the user saying that he completed his focus session and goal
       if (rewards.length === 0) {
+        playNotificationSound();
         showToast("You completed your focus session and goal!", "assets/images/check.gif");
         console.log("No reward assigned for this session count.");
       }
 
-      // Play notification sound only if there is no rewards
-      if (rewards.length === 0) {
-        playNotificationSound();
-      }
     } catch (error) {
       // if there's an error, log it to the console and show an error message to the user
       console.error("Error updating productivity or goal:", error);
-      showToast("An error occurred while updating productivity or goal.", "assets/images/error.png");
+      showToast("An error occurred while updating productivity or goal.", "assets/images/no.gif");
     }
   } else {
     // If all cycles are not completed, update the timer display and start the timer again
@@ -475,11 +586,11 @@ function resetTimer() {
   breakAfter = 0;
   currentSessionType = "focus";
   remainingTime = studyTime * 60;
-  notificationsEnabled = false;
   goalId = null;
 
   goalDisplay.classList.add("hidden");
   cycleInfo.classList.add("hidden");
+  timerStatus.classList.add("hidden");
   startPauseButton.textContent = "Start";
   updateTimerDisplay();
   cycleInfo.textContent = `Cycle ${cyclesCompleted + 1} out of ${cyclesPlanned}`;
@@ -532,24 +643,6 @@ function adjustValue(type, operation) {
     case "breakAfter":
       breakAfter = value;
       break;
-  }
-}
-
-// Play notification sound
-function playNotificationSound() {
-  if (notificationsEnabled === true) {
-    const audio = new Audio("assets/sounds/notif.mp3");
-    audio.play();
-    console.log("Notification sound played");
-  }
-}
-
-// Play achievement sound
-function playAchievementSound() {
-  if (notificationsEnabled === true) {
-    const audio = new Audio("assets/sounds/achievement.mp3");
-    audio.play();
-    console.log("Achievement sound played");
   }
 }
 

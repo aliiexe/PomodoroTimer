@@ -16,11 +16,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const goalsResponse = await axios.get(`http://localhost:5000/api/goals?userId=${userId}`);
+    let noGoals = document.getElementById('no-goals-message');
     let goalsData = goalsResponse.data;
     const goalsContainer = document.getElementById('goals-container');
 
     // Sort goals by createdAt in descending order
     goalsData = goalsData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if(goalsData.length === 0) {
+      noGoals.classList.remove('hidden');
+    }
 
     // Display goals
     const formatTime = (timeInSeconds) => {
@@ -110,9 +115,6 @@ document.addEventListener('DOMContentLoaded', async () => {
               console.log('Goal deleted:', response.data);
               showToast('Goal deleted successfully!', 'success');
               deleteModal.classList.add('hidden');
-              setTimeout(() => {
-                location.reload();
-              }, 1000);
             })
             .catch(error => {
               console.error('Error deleting goal:', error);

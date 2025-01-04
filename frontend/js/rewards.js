@@ -18,14 +18,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const userResponse = await axios.get(`http://localhost:5000/api/users/${userId}`);
+    let noBadges = document.getElementById('no-badges-message');
     const userData = userResponse.data;
     const badgesContainer = document.getElementById('badges-container');
 
+    if (userData.rewards.length === 0) {
+      noBadges.classList.remove('hidden');
+    }
+
     const badgeDetails = {
-      '67717d319594a1dae10556b1': { image: 'badge1.png', title: 'First Session Badge' },
-      '6771cbc74e7860685cb8a5e7': { image: 'badge2.png', title: 'First 25 Mins Session Complete' },
-      '6771cbde4e7860685cb8a5e9': { image: 'badge3.png', title: '5 Sessions Completed' },
-      '6771cbec4e7860685cb8a5eb': { image: 'badge4.png', title: '10 Sessions Completed' },
+      '67717d319594a1dae10556b1': { image: 'Badge1.png', title: 'First Session Badge' },
+      '6771cbc74e7860685cb8a5e7': { image: 'Badge2.png', title: 'First 25 Mins Session Complete' },
+      '6771cbde4e7860685cb8a5e9': { image: 'Badge3.png', title: '5 Sessions Completed' },
+      '6771cbec4e7860685cb8a5eb': { image: 'Badge4.png', title: '10 Sessions Completed' },
     };
 
     // Display user badges in the DOM using the badgeDetails object
