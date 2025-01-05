@@ -386,7 +386,7 @@ async function updateStreak(userId) {
     if (isConsecutiveDay) {
       streak++;
     } else {
-      streak = 1;
+      streak = 0;
     }
 
     if (streak > bestStreak) {

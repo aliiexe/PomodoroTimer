@@ -1,3 +1,9 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const user = JSON.parse(localStorage.getItem('user')) || {};
+  if (user._id) {
+    window.location.href = 'timer.html';
+  }
+});
 document.getElementById('signup-form').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -38,7 +44,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
 function showToast(message, type) {
   const toast = document.getElementById('toast');
   toast.textContent = message;
-  toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded shadow ${
+  toast.className = `fixed text-white bottom-4 right-4 px-4 py-2 rounded shadow ${
     type === 'success' ? 'bg-green-500' : 'bg-[#782EFF]'
   }`;
   toast.style.display = 'block';
