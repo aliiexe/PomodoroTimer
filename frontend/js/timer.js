@@ -478,6 +478,10 @@ async function handleSessionCompletion() {
       const productivityEntries = productivityResponse.data;
       const isFirstSession = productivityEntries.length === 1;
 
+      // Fetch user data to check existing rewards
+      const userResponse = await axios.get(`${API_BASE_URL}/users/${user._id}`);
+      const userData = userResponse.data;
+
       // Define rewards based on productivity stats
       let rewards = [];
       // if it's the user's first session ever (no productivity entries exist) and 
@@ -491,7 +495,9 @@ async function handleSessionCompletion() {
       }
       // if the user has completed 25 minutes of focus time and all cycles are completed as planned
       // he gets a badge for completing the first 25 minutes session
-      if (productivityEntries.length === 25 && cyclesCompleted >= cyclesPlanned) {
+      const totalFocusTime = productivityEntries.reduce((acc, entry) => acc + entry.totalStudyTime, 0);
+      const hasFirst25MinsReward = userData.rewards.includes('6771cbc74e7860685cb8a5e7');
+      if (totalFocusTime >= 25 * 60 && cyclesCompleted >= cyclesPlanned && !hasFirst25MinsReward) {
         rewards.push({
           id: '6771cbc74e7860685cb8a5e7',
           message: "First 25 Mins Session Complete",
