@@ -25,9 +25,21 @@ const createGoal = async (req, res) => {
   }
 }
 
-
 // Get all goals
 const getGoals = async (req, res) => {
+  try {
+    console.log("Fetching all goals");
+    const goals = await Goal.find();
+    res.status(200).json(goals);
+  } catch (error) {
+    console.error("Error fetching goals:", error);
+    res.status(500).json({ message: 'Error fetching goals', error });
+  }
+};
+
+
+// Get all goals for a specific user
+const getGoalsForUser = async (req, res) => {
   try {
     const { userId } = req.query;
     console.log("Fetching all goals for user:", userId);
@@ -87,6 +99,7 @@ const deleteGoal = async (req, res) => {
 module.exports = {
   createGoal,
   getGoals,
+  getGoalsForUser,
   getGoalById,
   updateGoal,
   deleteGoal,

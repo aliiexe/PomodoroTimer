@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - PeakFocus</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/timer    .css">
+  <link rel="shortcut icon" href="assets/images/PeakFocus icon.svg" type="image/x-icon">
+</head>
+<body class="bg-gray-50 font-sans">
+  <div class="max-w-7xl mx-auto p-6">
+    <header class="flex justify-between items-center mb-8">
+      <div>
+        <img src="assets/images/PeakFocus logo.svg" alt="PeakFocus Logo">
+      </div>
+      <nav class="hidden md:flex space-x-6 items-center auth-links">
+        <a href="dashboard.html" class="text-gray-600 hover:text-black">Dashboard</a>
+        <a href="timer.html" class="text-gray-600 hover:text-black">Timer</a>
+        <a href="rewards.html" class="text-gray-600 hover:text-black">Rewards</a>
+        <a href="goals.html" class="text-gray-600 hover:text-black">Goals</a>
+        <button onclick="logout()" id="logout-btn" class="border border-purple-600 text-purple-600 px-4 py-1 rounded-lg hover:bg-purple-100">Log out</button>
+      </nav>
+      <div class="hamburger md:hidden">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+      <div class="nav-menu md:hidden">
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="timer.html" class="nav-link">Timer</a>
+        <a href="rewards.html" class="nav-link">Rewards</a>
+        <a href="goals.html" class="nav-link">Goals</a>
+        <button onclick="logout()" id="logout-btn" class="border border-purple-600 text-purple-600 px-4 py-1 rounded-lg hover:bg-purple-100">Log out</button>
+      </div>
+    </header>
+
+    <!-- Cards Section -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+      <!-- Total Users -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Total Users</h2>
+        <p id="total-users" class="text-4xl font-bold text-[#8C4DFE]">0</p>
+      </div>
+
+      <!-- Total Goals -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Total Goals</h2>
+        <p id="total-goals" class="text-4xl font-bold text-[#8C4DFE]">0</p>
+      </div>
+
+      <!-- Total Rewards -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Total Rewards</h2>
+        <p id="total-rewards" class="text-4xl font-bold text-[#8C4DFE]">0</p>
+      </div>
+
+      <!-- Total Productivity Entries -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Total Productivity Entries</h2>
+        <p id="total-productivity-entries" class="text-4xl font-bold text-[#8C4DFE]">0</p>
+      </div>
+    </section>
+
+    <!-- Tables Section -->
+    <section class="mb-8">
+      <!-- Users Table -->
+      <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-lg font-semibold mb-4">Users</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="py-2 px-4 border-b">Username</th>
+                <th class="py-2 px-4 border-b">Email</th>
+              </tr>
+            </thead>
+            <tbody id="user-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Goals Table -->
+      <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-lg font-semibold mb-4">Goals</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="py-2 px-4 border-b">User ID</th>
+                <th class="py-2 px-4 border-b">Title</th>
+              </tr>
+            </thead>
+            <tbody id="goal-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Rewards Table -->
+      <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-lg font-semibold mb-4">Rewards</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="py-2 px-4 border-b">Name</th>
+                <th class="py-2 px-4 border-b">Type</th>
+              </tr>
+            </thead>
+            <tbody id="reward-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Productivity Entries Table -->
+      <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-lg font-semibold mb-4">Productivity Entries</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="py-2 px-4 border-b">User ID</th>
+                <th class="py-2 px-4 border-b">Study Time (mins)</th>
+              </tr>
+            </thead>
+            <tbody id="productivity-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="bg-white shadow-md rounded-lg p-6">
+      <h2 class="text-lg font-semibold mb-4">User Statistics</h2>
+      <div id="user-stats-chart" class="w-full h-64"></div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Define the base URL for the API
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "https://backend-psi-amber-81.vercel.app/api";
 
 // Define variables for the timer
 let timerInterval;
@@ -697,17 +697,17 @@ function showToast(message, imageUrl) {
   }, 5000); // Show the toast for 5 seconds
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const hamburger = document.querySelector('.hamburger');
-  const navMenu = document.querySelector('.nav-menu');
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
+  document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    });
+    document.querySelectorAll('.nav-link').forEach(link => 
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+      })
+    );
   });
-  document.querySelectorAll('.nav-link').forEach(link => 
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('active');
-      navMenu.classList.remove('active');
-    })
-  );
-});

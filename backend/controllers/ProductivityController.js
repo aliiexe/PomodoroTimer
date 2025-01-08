@@ -15,7 +15,19 @@ const createProductivity = async (req, res) => {
 };
 
 // Get all productivity entries
-const getProductivityEntries = async (req, res) => {
+const getProductivityEntries = async (req, res) => {  
+  try {
+    console.log("Fetching all productivity entries");
+    const productivityEntries = await Productivity.find();
+    res.status(200).json(productivityEntries);
+  } catch (error) {
+    console.error("Error fetching productivity entries:", error);
+    res.status(500).json({ message: 'Error fetching productivity entries', error });
+  }
+}
+
+// Get all productivity entries for a specific user
+const getProductivityEntriesForUser = async (req, res) => {
   try {
     const { userId } = req.query;
     console.log("Fetching all productivity entries for user:", userId);
@@ -75,6 +87,7 @@ const deleteProductivity = async (req, res) => {
 module.exports = {
   createProductivity,
   getProductivityEntries,
+  getProductivityEntriesForUser,
   getProductivityById,
   updateProductivity,
   deleteProductivity,
