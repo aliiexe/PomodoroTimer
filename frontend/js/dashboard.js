@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const userId = user._id;
 
   try {
-    const productivityResponse = await axios.get(`https://backend-psi-amber-81.vercel.app/api/productivity?userId=${userId}`);
+    const productivityResponse = await axios.get(`http://localhost:5000/api/productivity?userId=${userId}`);
     const productivityData = productivityResponse.data;
 
     const totalStudyTime = productivityData.reduce((acc, entry) => acc + entry.totalStudyTime, 0);
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('best-streak').textContent = `${bestStreak} days`;
 
     // Chart for goals progress
-    const goalsResponse = await axios.get(`https://backend-psi-amber-81.vercel.app/api/goals?userId=${userId}`);
+    const goalsResponse = await axios.get(`http://localhost:5000/api/goals?userId=${userId}`);
     const goalsData = goalsResponse.data;
     const goalsProgress = goalsData.map(goal => ({
       title: goal.title,

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const userId = user._id;
 
   try {
-    const userResponse = await axios.get(`https://backend-psi-amber-81.vercel.app/api/users/${userId}`);
+    const userResponse = await axios.get(`http://localhost:5000/api/users/${userId}`);
     let noBadges = document.getElementById('no-badges-message');
     const userData = userResponse.data;
     const badgesContainer = document.getElementById('badges-container');

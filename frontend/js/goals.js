@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const userId = user._id;
 
   try {
-    const goalsResponse = await axios.get(`https://backend-psi-amber-81.vercel.app/api/goals?userId=${userId}`);
+    const goalsResponse = await axios.get(`http://localhost:5000/api/goals?userId=${userId}`);
     let noGoals = document.getElementById('no-goals-message');
     let goalsData = goalsResponse.data;
     const goalsContainer = document.getElementById('goals-container');
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         confirmEditButton.onclick = () => {
           const newTitle = editGoalTitle.value;
           if (newTitle) {
-            axios.put(`https://backend-psi-amber-81.vercel.app/api/goals/${goal._id}`, { title: newTitle })
+            axios.put(`http://localhost:5000/api/goals/${goal._id}`, { title: newTitle })
               .then(response => {
                 goalItem.querySelector('h2').textContent = newTitle;
                 console.log('Goal updated:', response.data);
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Event listener for confirm delete button
         confirmDeleteButton.onclick = () => {
-          axios.delete(`https://backend-psi-amber-81.vercel.app/api/goals/${goal._id}`)
+          axios.delete(`http://localhost:5000/api/goals/${goal._id}`)
             .then(response => {
               goalItem.remove();
               console.log('Goal deleted:', response.data);

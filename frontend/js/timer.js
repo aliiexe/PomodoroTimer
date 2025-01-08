@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Define the base URL for the API
-const API_BASE_URL = "https://backend-psi-amber-81.vercel.app/api";
+const API_BASE_URL = "http://localhost:5000/api";
 
 // Define variables for the timer
 let timerInterval;

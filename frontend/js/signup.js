@@ -19,7 +19,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
   }
 
   try {
-    const response = await axios.post('https://backend-psi-amber-81.vercel.app/api/users', {
+    const response = await axios.post('http://localhost:5000/api/users', {
       username: name,
       email,
       password,

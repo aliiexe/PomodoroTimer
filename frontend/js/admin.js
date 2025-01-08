@@ -14,7 +14,7 @@ if (user._id) {
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     // Fetch total users
-    const usersResponse = await axios.get('https://backend-psi-amber-81.vercel.app/api/users');
+    const usersResponse = await axios.get('http://localhost:5000/api/users');
     const totalUsers = usersResponse.data.length;
     document.getElementById('total-users').textContent = totalUsers;
     const userList = document.getElementById('user-list');
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Fetch total goals
-    const goalsResponse = await axios.get('https://backend-psi-amber-81.vercel.app/api/goals');
+    const goalsResponse = await axios.get('http://localhost:5000/api/goals');
     const totalGoals = goalsResponse.data.length;
     document.getElementById('total-goals').textContent = totalGoals;
     const goalList = document.getElementById('goal-list');
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Fetch total rewards
-    const rewardsResponse = await axios.get('https://backend-psi-amber-81.vercel.app/api/rewards');
+    const rewardsResponse = await axios.get('http://localhost:5000/api/rewards');
     const totalRewards = rewardsResponse.data.length;
     document.getElementById('total-rewards').textContent = totalRewards;
     const rewardList = document.getElementById('reward-list');
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Fetch total productivity entries
-    const productivityResponse = await axios.get('https://backend-psi-amber-81.vercel.app/api/productivity');
+    const productivityResponse = await axios.get('http://localhost:5000/api/productivity');
     const totalProductivityEntries = productivityResponse.data.length;
     document.getElementById('total-productivity-entries').textContent = totalProductivityEntries;
     const productivityList = document.getElementById('productivity-list');
