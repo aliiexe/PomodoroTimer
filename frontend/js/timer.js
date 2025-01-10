@@ -9,7 +9,6 @@ if (user._id) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const userId = user._id;
-
   try {
     await updateStreak(userId);
   } catch (error) {
